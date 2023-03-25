@@ -88,9 +88,9 @@ const Fuel = () => {
 		
 		var url = 'https://localhost:7010/api/Branch'
 		
-		userType == 1 || userType == 2  || userType == 3 ?
-		url = 'https://localhost:7010/api/Branch' 
-		: url = `https://localhost:7010/api/Branch/branch/${branchId}`
+		// userType == 1 || userType == 2  || userType == 3 ?
+		// url = 'https://localhost:7010/api/Branch' 
+		// : url = `https://localhost:7010/api/Branch/branch/${branchId}`
 		
 		axios.get(url).
 		then((res)=> {
