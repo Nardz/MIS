@@ -30,13 +30,18 @@ const ApprovedFuel = () => {
 	return (
 		<>
 			<Box>
-				{/* <Header title="PO DETAILS" subtitle="Purchase Order Details." /> */}
-				<Box sx={{ display: 'flex', justifyContent: 'center' }}>
+				<Box
+					sx={{
+						display: 'flex',
+						justifyContent: 'center',
+						fontFamily: 'Tahoma, sans-serif',
+					}}
+				>
 					<Button
 						onClick={Print}
 						color="info"
 						variant="contained"
-						sx={{ fontWeight: 'bold', width: '7.6cm', m: 1 }}
+						sx={{ fontWeight: 'bold', width: '8cm', mb: 1 }}
 					>
 						PRINT
 					</Button>
@@ -44,7 +49,12 @@ const ApprovedFuel = () => {
 
 				<Box sx={{ display: 'flex', justifyContent: 'center' }}>
 					<Box
-						sx={{ width: '7.6cm', p: 2 }}
+						sx={{
+							width: '8cm',
+							p: 2,
+							backgroundColor: 'white',
+							color: 'black',
+						}}
 						component={Paper}
 						elevation={20}
 						id="printablediv"
@@ -54,12 +64,14 @@ const ApprovedFuel = () => {
 								display: 'flex',
 								justifyContent: 'center',
 								alignItems: 'center',
+								ml: '1cm',
+								mr: '1cm',
 							}}
 						>
 							<Box>
 								<img
 									src="..\..\assets\logo.png"
-									style={{ width: '35px' }}
+									style={{ width: '30px' }}
 									alt="logo"
 								></img>
 							</Box>
@@ -68,12 +80,13 @@ const ApprovedFuel = () => {
 									sx={{
 										ml: 1,
 										mr: 1,
-										fontWeight: 'bold',
 										textAlign: 'center',
 										fontSize: '9px',
+										fontFamily: 'Tahoma, sans-serif',
+										color: 'black',
 									}}
 								>
-									TACLOBAN WINNER MARKETING CORPORATION
+									TACLOBAN WINNER MARKETING CORP.
 								</Typography>
 								<Typography
 									sx={{
@@ -81,7 +94,9 @@ const ApprovedFuel = () => {
 										mr: 1,
 										fontWeight: 'bold',
 										textAlign: 'center',
-										fontSize: '14px',
+										fontSize: '12px',
+										fontFamily: 'Tahoma, sans-serif',
+										color: 'black',
 									}}
 								>
 									DIESEL REQUEST
@@ -94,12 +109,24 @@ const ApprovedFuel = () => {
 								justifyContent: 'space-between',
 								alignItems: 'center',
 								mt: 1,
+								fontFamily: 'Tahoma, sans-serif',
+								color: 'black',
+								ml: '1cm',
+								mr: '1cm',
 							}}
 						>
-							<Typography>PO # : </Typography>
 							<Typography
-								sx={{ fontWeight: 'bold', color: 'red' }}
-								variant="h4"
+								sx={{ fontFamily: 'Tahoma, sans-serif', fontSize: '11px' }}
+							>
+								PO # :{' '}
+							</Typography>
+							<Typography
+								sx={{
+									fontWeight: 'bold',
+									color: 'red',
+									fontFamily: 'Tahoma, sans-serif',
+								}}
+								variant="h5"
 							>
 								TAC-F001331
 							</Typography>
@@ -110,10 +137,31 @@ const ApprovedFuel = () => {
 								display: 'flex',
 								justifyContent: 'space-between',
 								alignItems: 'center',
+								fontFamily: 'Tahoma, sans-serif',
+								ml: '1cm',
+								mr: '1cm',
+								fontSize: '11px',
 							}}
 						>
-							<Typography>PO DATE : </Typography>
-							<Typography>03/09/2023</Typography>
+							<Typography
+								sx={{
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
+									fontSize: '11px',
+								}}
+							>
+								PO DATE :{' '}
+							</Typography>
+							<Typography
+								sx={{
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
+									fontSize: '11px',
+									fontWeight: 'bold',
+								}}
+							>
+								03/09/2023
+							</Typography>
 						</Box>
 
 						<Box
@@ -121,10 +169,31 @@ const ApprovedFuel = () => {
 								display: 'flex',
 								justifyContent: 'space-between',
 								alignItems: 'center',
+								fontFamily: 'Tahoma, sans-serif',
+								color: 'black',
+								ml: '1cm',
+								mr: '1cm',
 							}}
 						>
-							<Typography>SUPPLIER : </Typography>
-							<Typography>SHELL ABUCAY</Typography>
+							<Typography
+								sx={{
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
+									fontSize: '11px',
+								}}
+							>
+								SUPPLIER :{' '}
+							</Typography>
+							<Typography
+								sx={{
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
+									fontSize: '11px',
+									fontWeight: 'bold',
+								}}
+							>
+								SHELL ABUCAY
+							</Typography>
 						</Box>
 
 						<Box
@@ -132,10 +201,31 @@ const ApprovedFuel = () => {
 								display: 'flex',
 								justifyContent: 'space-between',
 								alignItems: 'center',
+								fontFamily: 'Tahoma, sans-serif',
+								color: 'black',
+								ml: '1cm',
+								mr: '1cm',
 							}}
 						>
-							<Typography>PLATE NO. : </Typography>
-							<Typography>HAC 1234</Typography>
+							<Typography
+								sx={{
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
+									fontSize: '11px',
+								}}
+							>
+								PLATE NO. :{' '}
+							</Typography>
+							<Typography
+								sx={{
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
+									fontSize: '11px',
+									fontWeight: 'bold',
+								}}
+							>
+								HAC 1234
+							</Typography>
 						</Box>
 
 						<Box
@@ -147,6 +237,9 @@ const ApprovedFuel = () => {
 								border: '1px solid',
 								borderColor: colors.primary[100],
 								p: 1,
+								fontFamily: 'Tahoma, sans-serif',
+								ml: '1cm',
+								mr: '1cm',
 							}}
 						>
 							<Box
@@ -155,11 +248,23 @@ const ApprovedFuel = () => {
 									textAlign: 'center',
 								}}
 							>
-								<Typography variant="h2" sx={{ fontWeight: 'bold' }}>
+								<Typography
+									variant="h3"
+									sx={{
+										fontWeight: 'bold',
+										fontFamily: 'Tahoma, sans-serif',
+										color: 'black',
+									}}
+								>
 									DIESEL
 								</Typography>
 
-								<Typography variant="p">TYPE</Typography>
+								<Typography
+									variant="p"
+									sx={{ fontFamily: 'Tahoma, sans-serif', color: 'black' }}
+								>
+									TYPE
+								</Typography>
 							</Box>
 
 							<Box
@@ -167,12 +272,25 @@ const ApprovedFuel = () => {
 									width: '100%',
 									textAlign: 'center',
 									fontWeight: 'bold',
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
 								}}
 							>
-								<Typography variant="h2" sx={{ fontWeight: 'bold' }}>
+								<Typography
+									variant="h3"
+									sx={{
+										fontWeight: 'bold',
+										fontFamily: 'Tahoma, sans-serif',
+										color: 'black',
+									}}
+								>
 									120
 								</Typography>
-								<Typography>LITRES</Typography>
+								<Typography
+									sx={{ fontFamily: 'Tahoma, sans-serif', color: 'black' }}
+								>
+									LITRES
+								</Typography>
 							</Box>
 						</Box>
 
@@ -182,10 +300,31 @@ const ApprovedFuel = () => {
 								justifyContent: 'space-between',
 								alignItems: 'center',
 								mt: 1,
+								fontFamily: 'Tahoma, sans-serif',
+								color: 'black',
+								ml: '1cm',
+								mr: '1cm',
 							}}
 						>
-							<Typography>ROUTE : </Typography>
-							<Typography>KALIBO</Typography>
+							<Typography
+								sx={{
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
+									fontSize: '11px',
+								}}
+							>
+								ROUTE :{' '}
+							</Typography>
+							<Typography
+								sx={{
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
+									fontSize: '11px',
+									fontWeight: 'bold',
+								}}
+							>
+								KALIBO
+							</Typography>
 						</Box>
 
 						<Box
@@ -193,10 +332,31 @@ const ApprovedFuel = () => {
 								display: 'flex',
 								justifyContent: 'space-between',
 								alignItems: 'center',
+								fontFamily: 'Tahoma, sans-serif',
+								color: 'black',
+								ml: '1cm',
+								mr: '1cm',
 							}}
 						>
-							<Typography>NO. OF BAGS : </Typography>
-							<Typography>420</Typography>
+							<Typography
+								sx={{
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
+									fontSize: '11px',
+								}}
+							>
+								NO. OF BAGS :{' '}
+							</Typography>
+							<Typography
+								sx={{
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
+									fontSize: '11px',
+									fontWeight: 'bold',
+								}}
+							>
+								420
+							</Typography>
 						</Box>
 
 						<Box
@@ -204,10 +364,31 @@ const ApprovedFuel = () => {
 								display: 'flex',
 								justifyContent: 'space-between',
 								alignItems: 'center',
+								fontFamily: 'Tahoma, sans-serif',
+								color: 'black',
+								ml: '1cm',
+								mr: '1cm',
 							}}
 						>
-							<Typography>REQUESTED BY : </Typography>
-							<Typography>JUAN DELA CRUZ</Typography>
+							<Typography
+								sx={{
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
+									fontSize: '11px',
+								}}
+							>
+								REQUESTED BY :{' '}
+							</Typography>
+							<Typography
+								sx={{
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
+									fontSize: '11px',
+									fontWeight: 'bold',
+								}}
+							>
+								JUAN DELA CRUZ
+							</Typography>
 						</Box>
 						{''}
 						<Box
@@ -216,7 +397,12 @@ const ApprovedFuel = () => {
 								justifyContent: 'space-between',
 								alignItems: 'center',
 								mt: 1,
-								p: 1,
+								pt: 1,
+								pb: 1,
+								fontFamily: 'Tahoma, sans-serif',
+								color: 'black',
+								ml: '1cm',
+								mr: '1cm',
 							}}
 						>
 							<Box
@@ -224,6 +410,8 @@ const ApprovedFuel = () => {
 									width: '100%',
 									textAlign: 'center',
 									mt: 1,
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
 								}}
 							>
 								<Box sx={{ position: 'relative' }}>
@@ -239,11 +427,27 @@ const ApprovedFuel = () => {
 									/>
 								</Box>
 
-								<Typography variant="p" sx={{ fontWeight: 'bold' }}>
+								<Typography
+									variant="p"
+									sx={{
+										fontWeight: 'bold',
+										fontFamily: 'Tahoma, sans-serif',
+										color: 'black',
+										fontSize: '11px',
+									}}
+								>
 									JUAN DELA CRUZ
 								</Typography>
 
-								<Typography sx={{ fontSize: '12px' }}>PREPARED BY</Typography>
+								<Typography
+									sx={{
+										fontFamily: 'Tahoma, sans-serif',
+										color: 'black',
+										fontSize: '11px',
+									}}
+								>
+									PREPARED BY
+								</Typography>
 							</Box>
 
 							<Box
@@ -265,19 +469,49 @@ const ApprovedFuel = () => {
 										}}
 									/>
 								</Box>
-								<Typography variant="p" sx={{ fontWeight: 'bold' }}>
+								<Typography
+									variant="p"
+									sx={{
+										fontWeight: 'bold',
+										fontFamily: 'Tahoma, sans-serif',
+										color: 'black',
+										fontSize: '11px',
+									}}
+								>
 									JUAN DELA CRUZ
 								</Typography>
-								<Typography sx={{ fontSize: '12px' }}>APPROVED BY</Typography>
+								<Typography
+									sx={{
+										fontSize: '11px',
+										fontFamily: 'Tahoma, sans-serif',
+										color: 'black',
+									}}
+								>
+									APPROVED BY
+								</Typography>
 							</Box>
 						</Box>
 
-						<Box sx={{ border: '1px solid red' }}>
-							<Typography sx={{ textAlign: 'center', fontSize: '10px' }}>
+						<Box sx={{ border: '1px solid red', ml: '1cm', mr: '1cm' }}>
+							<Typography
+								sx={{
+									textAlign: 'center',
+									fontSize: '10px',
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
+								}}
+							>
 								This is a computer-generated document. Any alteration or erasure
 								will render this void and invalid.
 							</Typography>
-							<Typography sx={{ textAlign: 'center', fontSize: '10px' }}>
+							<Typography
+								sx={{
+									textAlign: 'center',
+									fontSize: '10px',
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
+								}}
+							>
 								Date Generated: March 10, 2023
 							</Typography>
 							<Box
@@ -285,11 +519,20 @@ const ApprovedFuel = () => {
 									display: 'flex',
 									justifyContent: 'center',
 									alignItems: 'center',
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
 								}}
 							>
 								<QRCode value={QrValue} size={60} />
 							</Box>
-							<Typography sx={{ textAlign: 'center', fontSize: '10px' }}>
+							<Typography
+								sx={{
+									textAlign: 'center',
+									fontSize: '10px',
+									fontFamily: 'Tahoma, sans-serif',
+									color: 'black',
+								}}
+							>
 								**** Valid Until: March 12, 2023 ONLY ***
 							</Typography>
 						</Box>
