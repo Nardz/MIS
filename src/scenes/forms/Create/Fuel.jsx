@@ -23,6 +23,7 @@ import Header from '../../../components/header/Header';
 // } from '../../../data/mockData';
 import { tokens } from '../../../theme';
 import axios from 'axios';
+import { Dropdown } from 'bootstrap';
 
 const Fuel = () => {
 	const isNonMobile = useMediaQuery('(min-width:600px)');
@@ -31,7 +32,7 @@ const Fuel = () => {
 	const { enqueueSnackbar } = useSnackbar();
 
 	const handleFormSubmit =  (values, actions) => {
-		console.log(values);
+	//	console.log(values);
 		//console.log(actions);
 
 		const url = 'https://localhost:7010/api/POFuel/NewPOFuel'
@@ -72,7 +73,7 @@ const Fuel = () => {
 
 
 	const [poNumber,setPoNumber] = useState('')
-	const [branches,setbranches] = useState([])
+	//const [branches,setbranches] = useState([])
 	const [employees,setemployees] = useState([])
 	const [suppliers,setsuppliers] = useState([])
 	const [vehicles,setvehicles] = useState([])
@@ -80,23 +81,48 @@ const Fuel = () => {
 	const [fuelType,setfuelType] = useState([])
 	const empId = parseInt(sessionStorage.getItem("empId"))
     const userType = parseInt(sessionStorage.getItem("userType"))
-  //  const userType = 4
+   // const userType = 4
    const branchId = parseInt(sessionStorage.getItem("branch"))
-  // const branchId = 5
+   //const branchId = 3
+
+	const [dropDown, setdropDown] = useState()
 
 	useEffect(() =>{
 		
 		var url = 'https://localhost:7010/api/Branch'
+		var trigger = 0
 		
-		// userType == 1 || userType == 2  || userType == 3 ?
-		// url = 'https://localhost:7010/api/Branch' 
-		// : url = `https://localhost:7010/api/Branch/branch/${branchId}`
+		
+		if ( userType == 1 || userType == 2  || userType == 3 ) {
+			url = 'https://localhost:7010/api/Branch'
+			trigger = 0
+		}else {
+			url = `https://localhost:7010/api/Branch/branch/${branchId}`
+			trigger = 1
+		}
 		
 		axios.get(url).
 		then((res)=> {
+
 			
-			
-			setbranches(res.data)
+			const data = res.data
+			if (trigger == 0) {
+				setdropDown(	data.map((branch) => (
+					<MenuItem key={branch.branchId
+					} value={branch.branchId}>
+						{branch.description}
+					</MenuItem>
+				)))
+			} else {
+				setdropDown(	
+					<MenuItem key={data.branchId
+					} value={data.branchId}>
+						{data.description}
+					</MenuItem>
+				)
+			}
+			//setbranches(res.data)
+		
 			//console.log(res.data)
 
 		}).catch((err)=>{
@@ -281,12 +307,14 @@ const Fuel = () => {
 									label="branch"
 									name="branch"
 								>
-									{branches.map((branch) => (
+									{/* {branches.map((branch) => (
 										<MenuItem key={branch.branchId
 										} value={branch.branchId}>
 											{branch.description}
 										</MenuItem>
-									))}
+									))} */
+									
+									dropDown}
 								</Select>
 								<Typography
 									color="error"
