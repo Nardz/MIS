@@ -6,19 +6,46 @@ import {
 	Typography,
 	useTheme,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import { Route, useParams } from 'react-router-dom';
 import Header from '../../components/header/Header';
 import { tokens } from '../../theme';
+import axios from 'axios';
+import { useSnackbar } from 'notistack';
 
 const ApprovedFuel = () => {
 	const { id } = useParams();
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
+	const { enqueueSnackbar } = useSnackbar();
 
 	const QrValue = 'this is a test';
 
+	const [details, setdetails] = useState([])
+	const currentDate = new Date()
+	const twoDaysLater = new Date()
+	const options = { year: 'numeric', month: 'long', day: 'numeric' };
+	twoDaysLater.setDate(currentDate.getDate() + 2)
+
+
+		useEffect(()=>{
+
+		axios.get(`https://localhost:7010/api/POFuel/PoFuelDetails/${id}`).
+		then((res) =>{
+
+			setdetails(res.data)
+
+
+		}).catch((err) =>{
+			console.log(err)
+				const variant = 'error';
+				enqueueSnackbar('Unable to get PO Details ', {
+					variant,
+				});
+		})
+	},[])
+	
 	const Print = () => {
 		let printContents = document.getElementById('printablediv').innerHTML;
 		let originalContents = document.body.innerHTML;
@@ -128,7 +155,7 @@ const ApprovedFuel = () => {
 								}}
 								variant="h5"
 							>
-								TAC-F001331
+								{details.poNumber}
 							</Typography>
 						</Box>
 
@@ -160,7 +187,7 @@ const ApprovedFuel = () => {
 									fontWeight: 'bold',
 								}}
 							>
-								03/09/2023
+								{details.date}
 							</Typography>
 						</Box>
 
@@ -192,7 +219,7 @@ const ApprovedFuel = () => {
 									fontWeight: 'bold',
 								}}
 							>
-								SHELL ABUCAY
+									{details.supplierName}
 							</Typography>
 						</Box>
 
@@ -224,7 +251,7 @@ const ApprovedFuel = () => {
 									fontWeight: 'bold',
 								}}
 							>
-								HAC 1234
+								{details.plateNo}
 							</Typography>
 						</Box>
 
@@ -256,7 +283,7 @@ const ApprovedFuel = () => {
 										color: 'black',
 									}}
 								>
-									DIESEL
+									{details.fuel}
 								</Typography>
 
 								<Typography
@@ -284,7 +311,7 @@ const ApprovedFuel = () => {
 										color: 'black',
 									}}
 								>
-									120
+									{details.noLiters}
 								</Typography>
 								<Typography
 									sx={{ fontFamily: 'Tahoma, sans-serif', color: 'black' }}
@@ -323,7 +350,7 @@ const ApprovedFuel = () => {
 									fontWeight: 'bold',
 								}}
 							>
-								KALIBO
+								{details.route}
 							</Typography>
 						</Box>
 
@@ -355,7 +382,7 @@ const ApprovedFuel = () => {
 									fontWeight: 'bold',
 								}}
 							>
-								420
+								{details.noBags} 
 							</Typography>
 						</Box>
 
@@ -387,7 +414,7 @@ const ApprovedFuel = () => {
 									fontWeight: 'bold',
 								}}
 							>
-								JUAN DELA CRUZ
+								{details.requestor} 
 							</Typography>
 						</Box>
 						{''}
@@ -416,7 +443,7 @@ const ApprovedFuel = () => {
 							>
 								<Box sx={{ position: 'relative' }}>
 									<img
-										src="../../assets/esignature/40.png"
+										src={`../../assets/esignature/${details.preparedBy}.png`}
 										alt=""
 										height="50px"
 										style={{
@@ -436,7 +463,7 @@ const ApprovedFuel = () => {
 										fontSize: '11px',
 									}}
 								>
-									JUAN DELA CRUZ
+									{details.preparer} 
 								</Typography>
 
 								<Typography
@@ -459,7 +486,7 @@ const ApprovedFuel = () => {
 							>
 								<Box sx={{ position: 'relative' }}>
 									<img
-										src="../../assets/esignature/2.png"
+										src={`../../assets/esignature/${details.apprvdBy}.png`}
 										alt=""
 										width="130px"
 										style={{
@@ -478,7 +505,7 @@ const ApprovedFuel = () => {
 										fontSize: '11px',
 									}}
 								>
-									JUAN DELA CRUZ
+									{details.aprvby} 
 								</Typography>
 								<Typography
 									sx={{
@@ -512,7 +539,7 @@ const ApprovedFuel = () => {
 									color: 'black',
 								}}
 							>
-								Date Generated: March 10, 2023
+								Date Generated: {currentDate.toLocaleDateString('en-US', options)} 
 							</Typography>
 							<Box
 								sx={{
@@ -533,7 +560,7 @@ const ApprovedFuel = () => {
 									color: 'black',
 								}}
 							>
-								**** Valid Until: March 12, 2023 ONLY ***
+								**** Valid Until: {twoDaysLater.toLocaleDateString('en-US', options)} ONLY ***
 							</Typography>
 						</Box>
 					</Box>
