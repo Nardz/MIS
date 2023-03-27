@@ -67,7 +67,9 @@ const PoFuel = () => {
 
 	const empId = parseInt(sessionStorage.getItem("empId"))
   const userType = parseInt(sessionStorage.getItem("userType"))
+  //const userType = 4
   const branchId = parseInt(sessionStorage.getItem("branch"))
+  //const branchId = 3
 
 
 	

@@ -111,10 +111,10 @@ const PoFuel = () => {
 	const { enqueueSnackbar } = useSnackbar();
 
 	const empId = parseInt(sessionStorage.getItem("empId"))
-  const userType = parseInt(sessionStorage.getItem("userType"))
- // const userType = 4
-  const branchId = parseInt(sessionStorage.getItem("branch"))
-  //const branchId = 11
+  // const userType = parseInt(sessionStorage.getItem("userType"))
+  const userType = 4
+  // const branchId = parseInt(sessionStorage.getItem("branch"))
+  const branchId = 5
 
 
 	const [appPoFuelList, setappPoFuelList] = useState([])

@@ -560,7 +560,7 @@ const ApprovedFuel = () => {
 									color: 'black',
 								}}
 							>
-								**** Valid Until: {twoDaysLater.toLocaleDateString('en-US', options)} ONLY ***
+								*** Valid Until: {twoDaysLater.toLocaleDateString('en-US', options)} ONLY ***
 							</Typography>
 						</Box>
 					</Box>
