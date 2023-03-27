@@ -9,13 +9,19 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../../components/header/Header';
-import { appPoFuelList } from '../../data/mockData';
+//import { appPoFuelList } from '../../data/mockData';
 import { tokens } from '../../theme';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { useSnackbar } from 'notistack';
+import axios from 'axios';
+
+
 
 const columns = [
 	{ field: 'id', headerName: 'ID', flex: 0.5 },
 	{
-		field: 'ponum',
+		field: 'poNumber',
 		headerName: 'PO NUMBER',
 		flex: 1,
 		cellClassName: 'name-column--cell',
@@ -31,7 +37,7 @@ const columns = [
 		align: 'center',
 	},
 	{
-		field: 'podate',
+		field: 'date',
 		headerName: 'DATE',
 		type: 'text',
 		headerAlign: 'center',
@@ -39,14 +45,14 @@ const columns = [
 	},
 
 	{
-		field: 'platenum',
+		field: 'plateNo',
 		headerName: 'VEHICLE',
 		flex: 1,
 		headerAlign: 'center',
 		align: 'center',
 	},
 	{
-		field: 'fueltype',
+		field: 'fuel',
 		headerName: 'FUEL TYPE',
 		flex: 1,
 		headerAlign: 'center',
@@ -60,14 +66,14 @@ const columns = [
 		align: 'center',
 	},
 	{
-		field: 'bags',
+		field: 'noBags',
 		headerName: 'NO. OF BAGS',
 		flex: 1,
 		headerAlign: 'center',
 		align: 'center',
 	},
 	{
-		field: 'numblitres',
+		field: 'noLiters',
 		headerName: 'NO. OF LITRES',
 		flex: 1,
 		headerAlign: 'center',
@@ -102,6 +108,48 @@ const columns = [
 const PoFuel = () => {
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
+	const { enqueueSnackbar } = useSnackbar();
+
+	const empId = parseInt(sessionStorage.getItem("empId"))
+  const userType = parseInt(sessionStorage.getItem("userType"))
+ // const userType = 4
+  const branchId = parseInt(sessionStorage.getItem("branch"))
+  //const branchId = 11
+
+
+	const [appPoFuelList, setappPoFuelList] = useState([])
+
+useEffect(() =>{
+
+
+	var url = ''
+		
+		userType == 1 || userType == 2  || userType == 3 ?
+		url = 'https://localhost:7010/api/POFuel/ApprovedPOFuelList' 
+		: url = `https://localhost:7010/api/POFuel/ApprovedPOFuelListBranch/${branchId}`
+
+
+	const intervalid = setInterval(() => {
+		axios.get(url).
+	then((res)=>{
+
+		setappPoFuelList(res.data)
+
+	}).catch((err)=>{
+		console.log(err)
+			const variant = 'error';
+		enqueueSnackbar('Unable to retrieve approved fuel list', {
+			variant,
+		});
+	})
+	}, 1000)
+
+	return () => clearInterval(intervalid)
+
+	
+
+},[])
+
 	return (
 		<>
 			<Box m="0" p="0" width="100%" height="55vh">

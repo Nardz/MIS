@@ -23,7 +23,7 @@ import Header from '../../../components/header/Header';
 // } from '../../../data/mockData';
 import { tokens } from '../../../theme';
 import axios from 'axios';
-import { Dropdown } from 'bootstrap';
+
 
 const Fuel = () => {
 	const isNonMobile = useMediaQuery('(min-width:600px)');
