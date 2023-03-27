@@ -22,7 +22,8 @@ import Header from '../../../components/header/Header';
 // 	vehicles,
 // } from '../../../data/mockData';
 import { tokens } from '../../../theme';
-import axios from 'axios';
+//import axios from 'axios';
+import axiosInstance from '../../../api/axios';
 
 
 const Fuel = () => {
@@ -35,7 +36,7 @@ const Fuel = () => {
 	//	console.log(values);
 		//console.log(actions);
 
-		const url = 'https://localhost:7010/api/POFuel/NewPOFuel'
+		const url = 'POFuel/NewPOFuel'
 		const data = {
 					"branchId": values.branch,
 					"supplierId": values.supplier,
@@ -52,7 +53,7 @@ const Fuel = () => {
 					"status": 1
 		}
 
-		axios.post(url,data).
+		axiosInstance.post(url,data).
 		then((res) => {
 			
 			actions.resetForm();
@@ -89,19 +90,19 @@ const Fuel = () => {
 
 	useEffect(() =>{
 		
-		var url = 'https://localhost:7010/api/Branch'
+		var url = 'Branch'
 		var trigger = 0
 		
 		
 		if ( userType == 1 || userType == 2  || userType == 3 ) {
-			url = 'https://localhost:7010/api/Branch'
+			url = 'Branch'
 			trigger = 0
 		}else {
-			url = `https://localhost:7010/api/Branch/branch/${branchId}`
+			url = `Branch/branch/${branchId}`
 			trigger = 1
 		}
 		
-		axios.get(url).
+		axiosInstance.get(url).
 		then((res)=> {
 
 			
@@ -137,7 +138,7 @@ const Fuel = () => {
 	},[])
 
 	const getPoNumber = (id) =>{
-		axios.get(`https://localhost:7010/api/POFuel/PONumber/${id}`).
+		axiosInstance.get(`POFuel/PONumber/${id}`).
 		then((res)=>{
 				setPoNumber(res.data)
 		}).catch((err) =>{
@@ -150,7 +151,7 @@ const Fuel = () => {
 	}
 
 	const getRoute = (id) =>{
-		axios.get(`https://localhost:7010/api/Route/route/${id}`).
+		axiosInstance.get(`Route/route/${id}`).
 		then((res)=>{
 				setroutes(res.data)
 		}).catch((err) =>{
@@ -164,7 +165,7 @@ const Fuel = () => {
 
 
 	const getVehicle = (id) =>{
-		axios.get(`https://localhost:7010/api/Vehicle/vehiclebranch/${id}`).
+		axiosInstance.get(`Vehicle/vehiclebranch/${id}`).
 		then((res)=>{
 				setvehicles(res.data)
 		}).catch((err) =>{
@@ -177,7 +178,7 @@ const Fuel = () => {
 	}
 
 	const getFuelType = () =>{
-		axios.get(`https://localhost:7010/api/FuelType/fueltype`).
+		axiosInstance.get(`FuelType/fueltype`).
 		then((res)=>{
 			setfuelType(res.data)
 		}).catch((err) =>{
@@ -191,7 +192,7 @@ const Fuel = () => {
 
 
 	const getSupplier = (id) =>{
-		axios.get(`https://localhost:7010/api/Supplier/supplier/${id}`).
+		axiosInstance.get(`Supplier/supplier/${id}`).
 		then((res)=>{
 			setsuppliers(res.data)
 		}).catch((err) =>{
@@ -204,7 +205,7 @@ const Fuel = () => {
 	}
 
 	const getEmployees = (id) =>{
-		axios.get(`https://localhost:7010/api/EmployeeBranch/employeebranch/${id}`).
+		axiosInstance.get(`EmployeeBranch/employeebranch/${id}`).
 		then((res)=>{
 			setemployees(res.data)
 		}).catch((err) =>{

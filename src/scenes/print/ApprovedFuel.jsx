@@ -11,8 +11,9 @@ import QRCode from 'react-qr-code';
 import { Route, useParams } from 'react-router-dom';
 import Header from '../../components/header/Header';
 import { tokens } from '../../theme';
-import axios from 'axios';
+//import axios from 'axios';
 import { useSnackbar } from 'notistack';
+import axiosInstance from '../../api/axios';
 
 const ApprovedFuel = () => {
 	const { id } = useParams();
@@ -31,7 +32,7 @@ const ApprovedFuel = () => {
 
 		useEffect(()=>{
 
-		axios.get(`https://localhost:7010/api/POFuel/PoFuelDetails/${id}`).
+			axiosInstance.get(`POFuel/PoFuelDetails/${id}`).
 		then((res) =>{
 
 			setdetails(res.data)

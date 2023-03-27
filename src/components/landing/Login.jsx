@@ -15,7 +15,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { tokens } from '../../theme';
-import axios from 'axios';
+// import axios from 'axios';
+import axiosInstance from '../../api/axios';
 import { useSnackbar } from 'notistack';
 
 const Login = () => {
@@ -29,12 +30,12 @@ const Login = () => {
 	const handleFormSubmit = (values) => {
 
 
-			const url = 'https://localhost:7010/api/UserAuth/LogIn'
+			const url = 'UserAuth/LogIn'
 			const data = {
 				"username" : values.username,
 				"password" : values.password
 			}
-			axios.post(url,data)
+			axiosInstance.post(url,data)
 			.then((result)=> {
 				//console.log(result.data)
 				sessionStorage.setItem("empId",result.data.empId)

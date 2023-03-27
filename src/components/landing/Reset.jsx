@@ -16,7 +16,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { tokens } from '../../theme';
-import axios from 'axios'
+// import axios from 'axios'
+import axiosInstance from '../../api/axios';
 import { useSnackbar } from 'notistack';
 
 const Reset = () => {
@@ -28,7 +29,7 @@ const Reset = () => {
 	const isNonMobile = useMediaQuery('(min-width:600px)');
 
 	const process = (result, values) => {
-		const url = 'https://localhost:7010/api/UserAuth/Reset'
+		const url = 'UserAuth/Reset'
 		const data = 
 		{
 			"empId": result.data.empId,
@@ -36,7 +37,7 @@ const Reset = () => {
 			"password": values.newPassword
 		}
 
-		axios.put(url,data)
+		axiosInstance.put(url,data)
 		.then((res) =>{
 			console.log(res)
 			navigate('/login');
@@ -55,11 +56,11 @@ const Reset = () => {
 
 	const handleFormSubmit = (values) => {
 
-		axios.get(`https://localhost:7010/api/UserAuth/AuthKey/${values.securityCode}`)
+		axiosInstance.get(`UserAuth/AuthKey/${values.securityCode}`)
 		.then((result) =>{
 					if (result.data.recStatus == 0) {
 
-						axios.get(`https://localhost:7010/api/UserAuth/username/${values.username}`)
+						axiosInstance.get(`UserAuth/username/${values.username}`)
 						.then((res)=>{
 
 							if (res.data === result.data.empId) {

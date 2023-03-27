@@ -16,7 +16,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { tokens } from '../../theme';
-import axios from 'axios';
+// import axios from 'axios';
+import axiosInstance from '../../api/axios';
 import { useSnackbar } from 'notistack';
 
 const Registration = () => {
@@ -42,21 +43,21 @@ const Registration = () => {
 
 	const handleFormSubmit = (values) => {
 
-		axios.get(`https://localhost:7010/api/UserAuth/AuthKey/${values.securityCode}`)
+		axiosInstance.get(`UserAuth/AuthKey/${values.securityCode}`)
 		.then((result) =>{
 					if (result.data.recStatus == 1) {
 						
-						axios.get(`https://localhost:7010/api/Employee/EmpUserType/${result.data.empId}`)
+						axiosInstance.get(`Employee/EmpUserType/${result.data.empId}`)
 						.then((res) =>{
 
 
-							axios.get(`https://localhost:7010/api/UserAuth/username/${values.username}`)
+							axiosInstance.get(`UserAuth/username/${values.username}`)
 							.then((res)=>{
 							
 									ErrMsg('Username Already in Use!');
 								
 							}).catch((err)=>{
-								const url = 'https://localhost:7010/api/UserAuth/Register'
+								const url = 'UserAuth/Register'
 									const data = 
 									{
 										"empId": result.data.empId,
@@ -65,16 +66,16 @@ const Registration = () => {
 										"password": values.password
 									}
 			
-									axios.post(url,data)
+									axiosInstance.post(url,data)
 									.then((rslt) =>{
 		
-											 const url = 'https://localhost:7010/api/UserAuth/Key'
+											 const url = 'UserAuth/Key'
 											const data = 
 											{
 												 "empId": result.data.empId,
 												 "uniqueKey": values.securityCode
 											}
-											axios.put(url,data)
+											axiosInstance.put(url,data)
 											.then((res) =>{
 												console.log(res)
 											

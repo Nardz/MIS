@@ -13,7 +13,8 @@ import { poFuel, userTypes } from '../../data/mockData';
 import { tokens } from '../../theme';
 
 import * as React from 'react';
-import axios from 'axios';
+//import axios from 'axios';
+import axiosInstance from '../../api/axios';
 import { useEffect } from 'react';
 import { useSnackbar } from 'notistack';
 
@@ -80,7 +81,7 @@ const PoFuel = () => {
 		if (approvedFuel == null || approvedFuel == 0) {
 			FuelLiters = selectedItem.noLiters
 		}
-		const url = 'https://localhost:7010/api/POFuel/ApprovePOFuel'
+		const url = 'POFuel/ApprovePOFuel'
 		const data = {
 			"fuelRequestId": selectedItem.id,
 			"ponum": selectedItem.poNumber,
@@ -95,7 +96,7 @@ const PoFuel = () => {
 			"status": 3
 		}
 
-		axios.post(url,data)
+		axiosInstance.post(url,data)
 			.then((res)=> {
 
 				const variant = 'success';
@@ -126,7 +127,7 @@ const PoFuel = () => {
 				});
 		}else{
 
-			const url = 'https://localhost:7010/api/POFuel/ApprovePOFuel'
+			const url = 'POFuel/ApprovePOFuel'
 		const data = {
 			"fuelRequestId": selectedItem.id,
 			"ponum": selectedItem.poNumber,
@@ -141,7 +142,7 @@ const PoFuel = () => {
 			"status": 4
 		}
 
-		axios.post(url,data)
+		axiosInstance.post(url,data)
 			.then((res)=> {
 
 				const variant = 'success';
@@ -174,14 +175,14 @@ const PoFuel = () => {
 				});
 		}else{
 
-			const url = `https://localhost:7010/api/POFuel/CxlPOFuel/${selectedItem.id}`
+			const url = `POFuel/CxlPOFuel/${selectedItem.id}`
 		const data = {
 			"fuelRequestId": 0,
 			"poNumber": "",
 			"remarks": remark
 		}
 
-		axios.put(url,data)
+		axiosInstance.put(url,data)
 			.then((res)=> {
 
 				const variant = 'success';
@@ -219,11 +220,11 @@ const PoFuel = () => {
 		var url = ''
 		
 		userType == 1 || userType == 2  || userType == 3 ?
-		url = 'https://localhost:7010/api/POFuel/PoFuelDetailsPending' 
-		: url = `https://localhost:7010/api/POFuel/PoFuelDetailsPending/${branchId}`
+		url = 'POFuel/PoFuelDetailsPending' 
+		: url = `POFuel/PoFuelDetailsPending/${branchId}`
 
 		const intervalid = setInterval(() =>{
-			axios.get(url).
+			axiosInstance.get(url).
 			then((res)=>{
 			
 					setPending(res.data)

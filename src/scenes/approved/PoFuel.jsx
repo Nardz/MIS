@@ -14,7 +14,8 @@ import { tokens } from '../../theme';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useSnackbar } from 'notistack';
-import axios from 'axios';
+//import axios from 'axios';
+import axiosInstance from '../../api/axios';
 
 
 
@@ -111,10 +112,10 @@ const PoFuel = () => {
 	const { enqueueSnackbar } = useSnackbar();
 
 	const empId = parseInt(sessionStorage.getItem("empId"))
-  // const userType = parseInt(sessionStorage.getItem("userType"))
-  const userType = 4
-  // const branchId = parseInt(sessionStorage.getItem("branch"))
-  const branchId = 5
+  const userType = parseInt(sessionStorage.getItem("userType"))
+  //const userType = 4
+  const branchId = parseInt(sessionStorage.getItem("branch"))
+  //const branchId = 5
 
 
 	const [appPoFuelList, setappPoFuelList] = useState([])
@@ -125,12 +126,12 @@ useEffect(() =>{
 	var url = ''
 		
 		userType == 1 || userType == 2  || userType == 3 ?
-		url = 'https://localhost:7010/api/POFuel/ApprovedPOFuelList' 
-		: url = `https://localhost:7010/api/POFuel/ApprovedPOFuelListBranch/${branchId}`
+		url = 'POFuel/ApprovedPOFuelList' 
+		: url = `POFuel/ApprovedPOFuelListBranch/${branchId}`
 
 
 	const intervalid = setInterval(() => {
-		axios.get(url).
+		axiosInstance.get(url).
 	then((res)=>{
 
 		setappPoFuelList(res.data)
