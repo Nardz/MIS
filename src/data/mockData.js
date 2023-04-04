@@ -1670,6 +1670,7 @@ export const JOVehicleList = [
 		id: 1,
 		jonum: 'TAC-V0000001',
 		branch: 'TACLOBAN',
+		colorAccent: 'leySamAccent',
 		jodate: '02-20-2023',
 		serviceType: 'PREVENTIVE MAINTENANCE',
 		supplier: 'SHELL ABUCAY TACLOBAN',
@@ -1707,7 +1708,8 @@ export const JOVehicleList = [
 	{
 		id: 2,
 		jonum: 'TAC-V0000002',
-		branch: 'TACLOBAN',
+		branch: 'SOGOD',
+		colorAccent: 'sogodAccent',
 		jodate: '02-20-2023',
 		serviceType: 'PREVENTIVE MAINTENANCE',
 		supplier: 'SHELL ABUCAY TACLOBAN',
@@ -1738,7 +1740,8 @@ export const JOVehicleList = [
 	{
 		id: 3,
 		jonum: 'TAC-V0000003',
-		branch: 'TACLOBAN',
+		branch: 'HILONGOS',
+		colorAccent: 'hilongosAccent',
 		jodate: '02-20-2023',
 		serviceType: 'PREVENTIVE MAINTENANCE',
 		supplier: 'SHELL ABUCAY TACLOBAN',

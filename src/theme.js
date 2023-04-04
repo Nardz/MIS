@@ -67,6 +67,18 @@ export const tokens = (mode) => ({
 					800: '#2a2d64',
 					900: '#151632',
 				},
+				leySamAccent: '#FFBF00',
+
+				ormocAccent: '#FF7F50',
+				calbayogAccent: '#DE3163',
+				sogodAccent: '#DFFF00',
+				hilopngosAccent: '#9FE2BF',
+				iloiloAccent: '#40E0D0',
+				antiqueAccent: '#6495ED',
+				roxasAccent: '#AAFF00',
+				kaliboAccent: '#50C878',
+				palawanAccent: '#FAD5A5',
+				zamboangaAccent: '#FA5F55',
 		  }
 		: {
 				grey: {
@@ -131,6 +143,17 @@ export const tokens = (mode) => ({
 					800: '#c3c6fd',
 					900: '#e1e2fe',
 				},
+				leySamAccent: '#FFBF00',
+				ormocAccent: '#FF7F50',
+				calbayogAccent: '#DE3163',
+				sogodAccent: '#DFFF00',
+				hilopngosAccent: '#9FE2BF',
+				iloiloAccent: '#40E0D0',
+				antiqueAccent: '#6495ED',
+				roxasAccent: '#AAFF00',
+				kaliboAccent: '#50C878',
+				palawanAccent: '#FAD5A5',
+				zamboangaAccent: '#FA5F55',
 		  }),
 });
 

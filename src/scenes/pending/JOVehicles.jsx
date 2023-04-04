@@ -7,7 +7,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -15,6 +14,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useState } from 'react';
 import { JOVehicleList } from '../../data/mockData';
@@ -82,12 +82,31 @@ const JOVehicles = () => {
 						>
 							{jo.jonum}
 						</Typography>
-						<Chip
-							label={jo.branch}
-							color="warning"
-							size="small"
-							sx={{ fontWeight: 'bold' }}
-						/>
+
+						{jo.branch === 'TACLOBAN' ? (
+							<Chip
+								label={jo.branch}
+								size="small"
+								sx={{
+									fontWeight: 'bold',
+									backgroundColor: colors.leySamAccent,
+								}}
+							></Chip>
+						) : jo.branch === 'SOGOD' ? (
+							<Chip
+								label={jo.branch}
+								color="success"
+								size="small"
+								sx={{ fontWeight: 'bold' }}
+							></Chip>
+						) : (
+							<Chip
+								label={jo.branch}
+								color="error"
+								size="small"
+								sx={{ fontWeight: 'bold' }}
+							></Chip>
+						)}
 					</Box>
 
 					<MyBox>
