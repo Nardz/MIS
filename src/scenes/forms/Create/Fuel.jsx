@@ -15,6 +15,7 @@ import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import * as yup from 'yup';
 import Header from '../../../components/header/Header';
+import { Link, useNavigate } from 'react-router-dom';
 // import {
 // 	//branches,
 // 	employees,
@@ -31,6 +32,22 @@ const Fuel = () => {
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
 	const { enqueueSnackbar } = useSnackbar();
+	const navigate = useNavigate();
+	
+	const token = sessionStorage.getItem("token")
+	const config = {
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		}
+	};
+
+	//var empId = 0
+	const [empId, setEmpId] = useState(0);
+	const [userType, setuserType] = useState(0);
+	const [branchId, setbranchId] = useState(0);
+	
+	
 
 	const handleFormSubmit =  (values, actions) => {
 	//	console.log(values);
@@ -52,8 +69,9 @@ const Fuel = () => {
 					"recStatus": 1,
 					"status": 1
 		}
+		
 
-		axiosInstance.post(url,data).
+		axiosInstance.post(url,data,config).
 		then((res) => {
 			
 			actions.resetForm();
@@ -80,16 +98,22 @@ const Fuel = () => {
 	const [vehicles,setvehicles] = useState([])
 	const [routes,setroutes] = useState([])
 	const [fuelType,setfuelType] = useState([])
-	const empId = parseInt(sessionStorage.getItem("empId"))
-    const userType = parseInt(sessionStorage.getItem("userType"))
-   // const userType = 4
-   const branchId = parseInt(sessionStorage.getItem("branch"))
-   //const branchId = 3
+	// const [empId,setempId] = useState(0)
+	// const [userType,setuserType] = useState(0)
+	// const [branchId,setbranchId] = useState(0)
+
+
+
+	 
+ 
 
 	const [dropDown, setdropDown] = useState()
 
-	useEffect(() =>{
-		
+	const branchret = () =>{
+
+		// var userType = data.usertypeid
+		// var branchId = data.branch
+
 		var url = 'Branch'
 		var trigger = 0
 		
@@ -102,26 +126,27 @@ const Fuel = () => {
 			trigger = 1
 		}
 		
-		axiosInstance.get(url).
+		axiosInstance.get(url,config).
 		then((res)=> {
-
-			
+								
 			const data = res.data
-			if (trigger == 0) {
-				setdropDown(	data.map((branch) => (
-					<MenuItem key={branch.branchId
-					} value={branch.branchId}>
-						{branch.description}
-					</MenuItem>
-				)))
-			} else {
-				setdropDown(	
-					<MenuItem key={data.branchId
-					} value={data.branchId}>
-						{data.description}
-					</MenuItem>
-				)
-			}
+			
+				if (trigger == 0) {
+					setdropDown(data.map((branch) => (
+						<MenuItem key={branch.branchId
+						} value={branch.branchId}>
+							{branch.description}
+						</MenuItem>
+					)))
+				} else {
+					setdropDown(	
+						<MenuItem key={data.branchId
+						} value={data.branchId}>
+							{data.description}
+						</MenuItem>
+					)
+				}
+				
 			//setbranches(res.data)
 		
 			//console.log(res.data)
@@ -134,11 +159,45 @@ const Fuel = () => {
 		});
 		
 		})
+	}
+
+
+	const details = () =>{
 		
-	},[])
+		axiosInstance.get('UserAuth/Details',config).
+		then((res) => {
+
+			
+		//	 empId = res.data.empid
+			 setEmpId(res.data.empid);
+			 setuserType(res.data.usertypeid);
+			 setbranchId(res.data.branch);
+				branchret()
+		}).catch((err) => {
+			console.log(err)
+			if(err.response.status == 401){
+				sessionStorage.clear()
+				navigate('/login');
+			}else {
+						console.log(err)
+						const variant = 'error';
+					enqueueSnackbar('Unable to retrieve user data', {
+						variant,
+					});
+			}
+		})
+		
+	}
+	
+
+	useEffect(() =>{
+
+		details()
+		
+	},[empId,setuserType,setbranchId])
 
 	const getPoNumber = (id) =>{
-		axiosInstance.get(`POFuel/PONumber/${id}`).
+		axiosInstance.get(`POFuel/PONumber/${id}`,config).
 		then((res)=>{
 				setPoNumber(res.data)
 		}).catch((err) =>{
@@ -151,7 +210,7 @@ const Fuel = () => {
 	}
 
 	const getRoute = (id) =>{
-		axiosInstance.get(`Route/route/${id}`).
+		axiosInstance.get(`Route/route/${id}`,config).
 		then((res)=>{
 				setroutes(res.data)
 		}).catch((err) =>{
@@ -165,7 +224,7 @@ const Fuel = () => {
 
 
 	const getVehicle = (id) =>{
-		axiosInstance.get(`Vehicle/vehiclebranch/${id}`).
+		axiosInstance.get(`Vehicle/vehiclebranch/${id}`,config).
 		then((res)=>{
 				setvehicles(res.data)
 		}).catch((err) =>{
@@ -178,7 +237,7 @@ const Fuel = () => {
 	}
 
 	const getFuelType = () =>{
-		axiosInstance.get(`FuelType/fueltype`).
+		axiosInstance.get(`FuelType/fueltype`,config).
 		then((res)=>{
 			setfuelType(res.data)
 		}).catch((err) =>{
@@ -192,7 +251,7 @@ const Fuel = () => {
 
 
 	const getSupplier = (id) =>{
-		axiosInstance.get(`Supplier/supplier/${id}`).
+		axiosInstance.get(`Supplier/supplier/${id}`,config).
 		then((res)=>{
 			setsuppliers(res.data)
 		}).catch((err) =>{
@@ -205,7 +264,7 @@ const Fuel = () => {
 	}
 
 	const getEmployees = (id) =>{
-		axiosInstance.get(`EmployeeBranch/employeebranch/${id}`).
+		axiosInstance.get(`EmployeeBranch/employeebranch/${id}`,config).
 		then((res)=>{
 			setemployees(res.data)
 		}).catch((err) =>{

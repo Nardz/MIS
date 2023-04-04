@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { poFuel, userTypes } from '../../data/mockData';
 import { tokens } from '../../theme';
-
+import { Link, useNavigate } from 'react-router-dom';
 import * as React from 'react';
 //import axios from 'axios';
 import axiosInstance from '../../api/axios';
@@ -24,12 +24,15 @@ const MyBox = styled(Box)((theme) => ({
 	alignItems: 'center',
 }));
 
+
+
 const PoFuel = () => {
 	const [open, setOpen] = useState(false);
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
 	const { enqueueSnackbar } = useSnackbar();
-
+	const navigate = useNavigate();
+	
 	const handleClickOpen = () => {
 		setOpen(true);
 	};
@@ -66,11 +69,18 @@ const PoFuel = () => {
     setRemark(event.target.value);
   };
 
-	const empId = parseInt(sessionStorage.getItem("empId"))
-  const userType = parseInt(sessionStorage.getItem("userType"))
-  //const userType = 4
-  const branchId = parseInt(sessionStorage.getItem("branch"))
-  //const branchId = 3
+	const token = sessionStorage.getItem("token")
+
+	const config = {
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		}
+	};
+
+	const [empId, setEmpId] = useState(0);
+	const [userType, setuserType] = useState(0);
+	const [branchId, setbranchId] = useState(0);
 
 
 	
@@ -96,7 +106,7 @@ const PoFuel = () => {
 			"status": 3
 		}
 
-		axiosInstance.post(url,data)
+		axiosInstance.post(url,data,config)
 			.then((res)=> {
 
 				const variant = 'success';
@@ -142,7 +152,7 @@ const PoFuel = () => {
 			"status": 4
 		}
 
-		axiosInstance.post(url,data)
+		axiosInstance.post(url,data,config)
 			.then((res)=> {
 
 				const variant = 'success';
@@ -182,7 +192,7 @@ const PoFuel = () => {
 			"remarks": remark
 		}
 
-		axiosInstance.put(url,data)
+		axiosInstance.put(url,data,config)
 			.then((res)=> {
 
 				const variant = 'success';
@@ -212,33 +222,69 @@ const PoFuel = () => {
 	const  [pending, setPending] = useState([])
 	
 	
+	const details = () =>{
+
+		const intervalid = setInterval(() =>{
+			axiosInstance.get('UserAuth/Details',config).
+		then((res) => {
+			
+			setEmpId(res.data.empid);
+			setuserType(res.data.usertypeid);
+			setbranchId(res.data.branch);
+			// console.log(res.data.empid)
+			 pendingPO()
+		}).catch((err) => {
+			console.log(err)
+			if(err.response.status == 401){
+				sessionStorage.clear()
+				navigate('/login');
+			}else {
+						console.log(err)
+						const variant = 'error';
+					enqueueSnackbar('Unable to retrieve user data', {
+						variant,
+					});
+			}
+		})
 
 
-	useEffect(() =>{
+		},5000)
 
+		return () => clearInterval(intervalid)
+		
+		
+		
+	}
 
+	const pendingPO = () =>{
+		
 		var url = ''
 		
 		userType == 1 || userType == 2  || userType == 3 ?
 		url = 'POFuel/PoFuelDetailsPending' 
 		: url = `POFuel/PoFuelDetailsPending/${branchId}`
 
-		const intervalid = setInterval(() =>{
-			axiosInstance.get(url).
-			then((res)=>{
-			
-					setPending(res.data)
-				
-			}).catch((err) =>{
-				console.log(err)
-			})
-
-
-		},1000)
-
-		return () => clearInterval(intervalid)
+		axiosInstance.get(url,config).
+		then((res)=>{
 		
-	},[])
+			if (res.data.length !== pending.length) {
+        setPending(res.data);
+      }
+			
+		}).catch((err) =>{
+			console.log(err)
+		})
+
+		
+	}
+
+
+
+	useEffect(() =>{
+
+		details()
+		
+	},[empId, userType, branchId,pending])
 
 	return (
 		<>
