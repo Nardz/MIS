@@ -29,6 +29,8 @@ import ApprovedFuel from './scenes/print/ApprovedFuel';
 import Team from './scenes/team';
 import Vehicles from './scenes/vehicles';
 import { ColorModeContext, useMode } from './theme';
+import { Provider, useDispatch } from 'react-redux';
+import store from './redux/store';
 
 
 function App() {
@@ -36,8 +38,10 @@ function App() {
 	const [isSidebar, setIsSidebar] = useState(true);
 
 	return (
+		
 		<ColorModeContext.Provider value={colorMode}>
 			<ThemeProvider theme={theme}>
+			<Provider store={store}>
 				<div className="app">
 					<Routes>
 						<Route element={<WNav />}>
@@ -80,8 +84,10 @@ function App() {
 					</Routes>
 				</div>
 				<CssBaseline />
+				</Provider>
 			</ThemeProvider>
 		</ColorModeContext.Provider>
+	
 	);
 }
 

@@ -26,6 +26,10 @@ import { tokens } from '../../../theme';
 //import axios from 'axios';
 import axiosInstance from '../../../api/axios';
 
+import { useDispatch } from 'react-redux';
+import { updatePO } from '../../../redux/poSlice';
+
+
 
 const Fuel = () => {
 	const isNonMobile = useMediaQuery('(min-width:600px)');
@@ -47,47 +51,47 @@ const Fuel = () => {
 	const [userType, setuserType] = useState(0);
 	const [branchId, setbranchId] = useState(0);
 	
-	
+	const dispatch = useDispatch();
 
-	const handleFormSubmit =  (values, actions) => {
-	//	console.log(values);
-		//console.log(actions);
+	const handleFormSubmit = async (values, actions) => {
 
-		const url = 'POFuel/NewPOFuel'
-		const data = {
-					"branchId": values.branch,
-					"supplierId": values.supplier,
-					"vehicleId": values.plateNum,
-					"poNumber": poNumber,
-					"fuelType": values.fuelType,
-					"noLiters": parseInt(values.numLitres),
-					"routeId": values.route,
-					"noBags": parseInt(values.numBags),
-					"requestedBy": values.requestdBy,
-					"preparedBy": empId,
-					"remarks": values.remarks,
-					"recStatus": 1,
-					"status": 1
-		}
 		
 
-		axiosInstance.post(url,data,config).
-		then((res) => {
-			
+		const url = 'POFuel/NewPOFuel';
+		const data = {
+			"branchId": values.branch,
+			"supplierId": values.supplier,
+			"vehicleId": values.plateNum,
+			"poNumber": poNumber,
+			"fuelType": values.fuelType,
+			"noLiters": parseInt(values.numLitres),
+			"routeId": values.route,
+			"noBags": parseInt(values.numBags),
+			"requestedBy": values.requestdBy,
+			"preparedBy": empId,
+			"remarks": values.remarks,
+			"recStatus": 1,
+			"status": 1
+		};
+	
+		try {
+			const res = await axiosInstance.post(url, data, config);
 			actions.resetForm();
-			setPoNumber('')
+			setPoNumber('');
 			const variant = 'success';
 			enqueueSnackbar('PO Number ' + poNumber + ' has been successfully created', {
 				variant,
 			});
 
-		}).catch((err)=>{
-			console.log(err)
+			dispatch(updatePO({}));
+
+		} catch (err) {
+			console.log(err);
 			const variant = 'error';
-		enqueueSnackbar('Unable to add  PO Number ' + poNumber, {
-			variant,
-		});
-		})
+			enqueueSnackbar('Unable to add PO Number ' + poNumber, {
+				variant,
+			});
+		}
 	};
 
 

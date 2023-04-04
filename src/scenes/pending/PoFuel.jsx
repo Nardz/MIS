@@ -18,6 +18,10 @@ import axiosInstance from '../../api/axios';
 import { useEffect } from 'react';
 import { useSnackbar } from 'notistack';
 
+import { useDispatch } from 'react-redux';
+import { updatePO } from '../../redux/poSlice';
+import { useSelector } from 'react-redux';
+
 const MyBox = styled(Box)((theme) => ({
 	display: 'flex',
 	justifyContent: 'space-between',
@@ -222,69 +226,119 @@ const PoFuel = () => {
 	const  [pending, setPending] = useState([])
 	
 	
-	const details = () =>{
+	// const details = () =>{
 
-		const intervalid = setInterval(() =>{
-			axiosInstance.get('UserAuth/Details',config).
-		then((res) => {
+	// 	const intervalid = setInterval(() =>{
+	// 		axiosInstance.get('UserAuth/Details',config).
+	// 	then((res) => {
 			
-			setEmpId(res.data.empid);
-			setuserType(res.data.usertypeid);
-			setbranchId(res.data.branch);
-			// console.log(res.data.empid)
-			 pendingPO()
-		}).catch((err) => {
-			console.log(err)
-			if(err.response.status == 401){
-				sessionStorage.clear()
-				navigate('/login');
-			}else {
+	// 		setEmpId(res.data.empid);
+	// 		setuserType(res.data.usertypeid);
+	// 		setbranchId(res.data.branch);
+	// 		// console.log(res.data.empid)
+	// 		 pendingPO()
+	// 	}).catch((err) => {
+	// 		console.log(err)
+	// 		if(err.response.status == 401){
+	// 			sessionStorage.clear()
+	// 			navigate('/login');
+	// 		}else {
+	// 					console.log(err)
+	// 					const variant = 'error';
+	// 				enqueueSnackbar('Unable to retrieve user data', {
+	// 					variant,
+	// 				});
+	// 		}
+	// 	})
+
+
+	// 	},5000)
+
+	// 	return () => clearInterval(intervalid)
+		
+		
+		
+	// }
+
+	// const pendingPO = () =>{
+		
+	// 	var url = ''
+		
+	// 	userType == 1 || userType == 2  || userType == 3 ?
+	// 	url = 'POFuel/PoFuelDetailsPending' 
+	// 	: url = `POFuel/PoFuelDetailsPending/${branchId}`
+
+	// 	axiosInstance.get(url,config).
+	// 	then((res)=>{
+		
+	// 		if (res.data.length !== pending.length) {
+  //       setPending(res.data);
+  //     }
+			
+	// 	}).catch((err) =>{
+	// 		console.log(err)
+	// 	})
+
+		
+	// }
+
+
+
+	// useEffect(() =>{
+
+	// 	details()
+		
+	// },[empId, userType, branchId,pending])
+
+
+	const dispatch = useDispatch();
+
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const res = await axiosInstance.get('UserAuth/Details',config);
+				setEmpId(res.data.empid);
+				setuserType(res.data.usertypeid);
+				setbranchId(res.data.branch);
+
+				try {
+
+					var url = ''
+		
+							userType == 1 || userType == 2  || userType == 3 ?
+							url = 'POFuel/PoFuelDetailsPending' 
+							: url = `POFuel/PoFuelDetailsPending/${branchId}`
+
+							const res = await axiosInstance.get(url,config);
+							dispatch(updatePO(res.data));
+							setPending(res.data)
+
+				} catch (err){
 						console.log(err)
-						const variant = 'error';
-					enqueueSnackbar('Unable to retrieve user data', {
-						variant,
-					});
+				}
+				
+			} catch (err) {
+				console.log(err)
+						if(err.response.status == 401){
+							sessionStorage.clear()
+							navigate('/login');
+						}else {
+									console.log(err)
+									const variant = 'error';
+								enqueueSnackbar('Unable to retrieve user data', {
+									variant,
+								});
+						}
 			}
-		})
+		};
+	
+		fetchData();
+	}, [dispatch,empId, userType, branchId,pending]);
 
+  //setPending(useSelector(state => state.po));
+//console.log(pending)
 
-		},5000)
-
-		return () => clearInterval(intervalid)
-		
-		
-		
-	}
-
-	const pendingPO = () =>{
-		
-		var url = ''
-		
-		userType == 1 || userType == 2  || userType == 3 ?
-		url = 'POFuel/PoFuelDetailsPending' 
-		: url = `POFuel/PoFuelDetailsPending/${branchId}`
-
-		axiosInstance.get(url,config).
-		then((res)=>{
-		
-			if (res.data.length !== pending.length) {
-        setPending(res.data);
-      }
-			
-		}).catch((err) =>{
-			console.log(err)
-		})
-
-		
-	}
-
-
-
-	useEffect(() =>{
-
-		details()
-		
-	},[empId, userType, branchId,pending])
 
 	return (
 		<>
