@@ -28,63 +28,84 @@ const Reset = () => {
 
 	const isNonMobile = useMediaQuery('(min-width:600px)');
 
-	const process = (result, values) => {
+	// const process = (result, values) => {
+	// 	const url = 'UserAuth/Reset'
+	// 	const data = 
+	// 	{
+	// 		"regKey": result.data.empId,
+	// 		"username": values.username,
+	// 		"password": values.newPassword
+	// 	}
+
+	// 	axiosInstance.put(url,data)
+	// 	.then((res) =>{
+	// 		console.log(res)
+	// 		navigate('/login');
+	// 	}).catch((err)=>{
+	// 		console.log(err)
+	// 		ErrMsg('Unable to Reset Account!')
+	// 	})
+	// }
+
+	// const ErrMsg = (msg) =>{
+	// 	const variant = 'error';
+	// 			enqueueSnackbar(msg, {
+	// 				variant,
+	// 			});
+	// }
+
+	const handleFormSubmit = async (values) => {
+
+		
+
 		const url = 'UserAuth/Reset'
 		const data = 
 		{
-			"empId": result.data.empId,
+			"regKey": values.securityCode,
 			"username": values.username,
 			"password": values.newPassword
 		}
+		const res = axiosInstance.put(url,data)
 
-		axiosInstance.put(url,data)
-		.then((res) =>{
+		try {
 			console.log(res)
 			navigate('/login');
-		}).catch((err)=>{
-			console.log(err)
-			ErrMsg('Unable to Reset Account!')
-		})
-	}
+		}catch (err){
+			const variant = 'error';
+			enqueueSnackbar('Unable to Reset Account!', {
+				variant,
+			});
+		}
 
-	const ErrMsg = (msg) =>{
-		const variant = 'error';
-				enqueueSnackbar(msg, {
-					variant,
-				});
-	}
+		// axiosInstance.get(`UserAuth/AuthKey/${values.securityCode}`)
+		// .then((result) =>{
+		// 			if (result.data.recStatus == 0) {
 
-	const handleFormSubmit = (values) => {
+		// 				axiosInstance.get(`UserAuth/username/${values.username}`)
+		// 				.then((res)=>{
 
-		axiosInstance.get(`UserAuth/AuthKey/${values.securityCode}`)
-		.then((result) =>{
-					if (result.data.recStatus == 0) {
-
-						axiosInstance.get(`UserAuth/username/${values.username}`)
-						.then((res)=>{
-
-							if (res.data === result.data.empId) {
-								process(result,values)
-							}else{
-								ErrMsg('Username Already in Use!')
+		// 					if (res.data === result.data.empId) {
+		// 						process(result,values)
+		// 					}else{
+		// 						ErrMsg('Username Already in Use!')
 							
-							}
+		// 					}
 
-						}).catch((err)=>{
-								process(result, values)
-						})
+		// 				}).catch((err)=>{
+		// 						process(result, values)
+		// 				})
 
-					}else{
-						console.log('No account yet!')
-						ErrMsg('No Account Created Yet!')
+		// 			}else{
+		// 				console.log('No account yet!')
+		// 				ErrMsg('No Account Created Yet!')
 						
-					}
+		// 			}
 
-		}).catch((error) =>{
-			console.log(error)
-			ErrMsg('Security Code Does\'nt Exist!')
+		// }).catch((error) =>{
+		// 	console.log(error)
+		// 	ErrMsg('Security Code Does\'nt Exist!')
 			
-		})
+		// })
 
 		// console.log(values);
 		// localStorage.setItem('user', 'test');

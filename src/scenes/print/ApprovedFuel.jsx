@@ -14,6 +14,7 @@ import { tokens } from '../../theme';
 //import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import axiosInstance from '../../api/axios';
+import { Link,useNavigate } from 'react-router-dom';
 
 const ApprovedFuel = () => {
 	const { id } = useParams();
@@ -24,28 +25,78 @@ const ApprovedFuel = () => {
 	const QrValue = 'this is a test';
 
 	const [details, setdetails] = useState([])
-	const currentDate = new Date()
-	const twoDaysLater = new Date()
+	const [aprvdate, setaprvdate] = useState()
+	const currentDate = new Date(aprvdate)
+	const twoDaysLater = new Date(aprvdate)
 	const options = { year: 'numeric', month: 'long', day: 'numeric' };
 	twoDaysLater.setDate(currentDate.getDate() + 2)
+
+	
+	const navigate = useNavigate();
+	
+	const token = sessionStorage.getItem("token")
+	const config = {
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		}
+	};
 
 
 		useEffect(()=>{
 
-			axiosInstance.get(`POFuel/PoFuelDetails/${id}`).
-		then((res) =>{
-
-			setdetails(res.data)
-
-
-		}).catch((err) =>{
-			console.log(err)
-				const variant = 'error';
-				enqueueSnackbar('Unable to get PO Details ', {
+			const fetchData = async () => {
+				try {
+					const res = await axiosInstance.get('UserAuth/Details',config)
+								
+					try {	
+		
+						
+						const res = await axiosInstance.get(`POFuel/PoFuelDetails/${id}`, config);
+					
+						setdetails(res.data)
+						setaprvdate(details.aprvdate2)
+						
+		
+					}catch (err) {
+						console.log(err);
+						if(err.response.status == 401){
+							sessionStorage.clear()
+							navigate('/login');
+						}else {
+									console.log(err)
+									const variant = 'error';
+								enqueueSnackbar('Unable to get PO Details', {
+									variant,
+								});
+						}
+					}
+					
+				} catch (err) {
+					console.log(err);
+					const variant = 'error';
+				enqueueSnackbar('Unable to retrieve user data', {
 					variant,
 				});
-		})
-	},[])
+				}
+			};
+		
+			fetchData();
+
+		// 	axiosInstance.get(`POFuel/PoFuelDetails/${id}`,config).
+		// then((res) =>{
+
+		// 	setdetails(res.data)
+
+
+		// }).catch((err) =>{
+		// 	console.log(err)
+		// 		const variant = 'error';
+		// 		enqueueSnackbar('Unable to get PO Details ', {
+		// 			variant,
+		// 		});
+		// })
+	},[details])
 	
 	const Print = () => {
 		let printContents = document.getElementById('printablediv').innerHTML;

@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import Header from '../../components/header/Header';
 //import { appPoFuelList } from '../../data/mockData';
 import { tokens } from '../../theme';
@@ -16,6 +16,9 @@ import { useState } from 'react';
 import { useSnackbar } from 'notistack';
 //import axios from 'axios';
 import axiosInstance from '../../api/axios';
+import { useDispatch } from 'react-redux';
+import { updatePO } from '../../redux/poSlice';
+import { updateApprovedPO } from '../../redux/approvedPOSlice';
 
 
 
@@ -74,7 +77,7 @@ const columns = [
 		align: 'center',
 	},
 	{
-		field: 'noLiters',
+		field: 'aprvliters',
 		headerName: 'NO. OF LITRES',
 		flex: 1,
 		headerAlign: 'center',
@@ -111,45 +114,106 @@ const PoFuel = () => {
 	const colors = tokens(theme.palette.mode);
 	const { enqueueSnackbar } = useSnackbar();
 
-	const empId = parseInt(sessionStorage.getItem("empId"))
-  const userType = parseInt(sessionStorage.getItem("userType"))
-  //const userType = 4
-  const branchId = parseInt(sessionStorage.getItem("branch"))
+	// const empId = parseInt(sessionStorage.getItem("empId"))
+  // const userType = parseInt(sessionStorage.getItem("userType"))
+  // //const userType = 4
+  // const branchId = parseInt(sessionStorage.getItem("branch"))
   //const branchId = 5
+
+	const navigate = useNavigate();
+	
+	const token = sessionStorage.getItem("token")
+	const config = {
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		}
+	};
+
+	const [empId, setEmpId] = useState(0);
+	const [userType, setuserType] = useState(0);
+	const [branchId, setbranchId] = useState(0);
 
 
 	const [appPoFuelList, setappPoFuelList] = useState([])
 
-useEffect(() =>{
+// useEffect(() =>{
 
 
-	var url = ''
+// 	var url = ''
 		
-		userType == 1 || userType == 2  || userType == 3 ?
-		url = 'POFuel/ApprovedPOFuelList' 
-		: url = `POFuel/ApprovedPOFuelListBranch/${branchId}`
+// 		userType == 1 || userType == 2  || userType == 3 ?
+// 		url = 'POFuel/ApprovedPOFuelList' 
+// 		: url = `POFuel/ApprovedPOFuelListBranch/${branchId}`
 
 
-	const intervalid = setInterval(() => {
-		axiosInstance.get(url).
-	then((res)=>{
+// 	const intervalid = setInterval(() => {
+// 		axiosInstance.get(url).
+// 	then((res)=>{
 
-		setappPoFuelList(res.data)
+// 		setappPoFuelList(res.data)
 
-	}).catch((err)=>{
-		console.log(err)
-			const variant = 'error';
-		enqueueSnackbar('Unable to retrieve approved fuel list', {
-			variant,
-		});
-	})
-	}, 1000)
+// 	}).catch((err)=>{
+// 		console.log(err)
+// 			const variant = 'error';
+// 		enqueueSnackbar('Unable to retrieve approved fuel list', {
+// 			variant,
+// 		});
+// 	})
+// 	}, 1000)
 
-	return () => clearInterval(intervalid)
+// 	return () => clearInterval(intervalid)
 
 	
 
-},[])
+// },[])
+
+const dispatch = useDispatch();
+const url = userType === 1 || userType === 2 || userType === 3
+				? 'POFuel/ApprovedPOFuelList'
+				: `POFuel/ApprovedPOFuelListBranch/${branchId}`;
+
+
+useEffect(() => {
+	const fetchData = async () => {
+		try {
+			const res = await axiosInstance.get('UserAuth/Details',config)
+						setEmpId(res.data.empid);
+						setuserType(res.data.usertypeid);
+						setbranchId(res.data.branch);
+			try {	
+
+				
+				const res = await axiosInstance.get(url, config);
+				dispatch(updateApprovedPO(res.data));
+				setappPoFuelList(res.data)
+
+			}catch (err) {
+				console.log(err);
+				if(err.response.status == 401){
+					sessionStorage.clear()
+					navigate('/login');
+				}else {
+							console.log(err)
+							const variant = 'error';
+						enqueueSnackbar('Unable to retrieve approved fuel list', {
+							variant,
+						});
+				}
+			}
+			
+		} catch (err) {
+			console.log(err);
+			const variant = 'error';
+		enqueueSnackbar('Unable to retrieve user data', {
+			variant,
+		});
+		}
+	};
+
+	fetchData();
+}, [dispatch, url,appPoFuelList]);
+
 
 	return (
 		<>

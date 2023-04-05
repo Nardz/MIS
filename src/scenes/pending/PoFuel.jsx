@@ -20,7 +20,8 @@ import { useSnackbar } from 'notistack';
 
 import { useDispatch } from 'react-redux';
 import { updatePO } from '../../redux/poSlice';
-import { useSelector } from 'react-redux';
+import { updateApprovedPO } from '../../redux/approvedPOSlice';
+
 
 const MyBox = styled(Box)((theme) => ({
 	display: 'flex',
@@ -90,8 +91,9 @@ const PoFuel = () => {
 	
 	var FuelLiters = approvedFuel
 
-	const ApprvFuel = () => {
-
+	const ApprvFuel = async (e) => {
+		e.preventDefault()
+		
 		if (approvedFuel == null || approvedFuel == 0) {
 			FuelLiters = selectedItem.noLiters
 		}
@@ -109,26 +111,46 @@ const PoFuel = () => {
 			"notes": "",
 			"status": 3
 		}
-
-		axiosInstance.post(url,data,config)
-			.then((res)=> {
-
-				const variant = 'success';
-				enqueueSnackbar('Po Number: ' + selectedItem.poNumber + 'successfully added!', {
-					variant,
-				});
-
-				setApprovedFuel(0)
-			
+		//console.log(FuelLiters)
+		const res = await axiosInstance.post(url,data,config)
+		
+		try {
+			const variant = 'success';
+			enqueueSnackbar('Po Number: ' + selectedItem.poNumber + 'successfully added!', {
+				variant,
+			});
+		
+			setApprovedFuel(0)
 			handleClose()
-			}).catch((error) => {
-				console.log(error.response.data)
+			dispatch(updateApprovedPO({}));
+		}catch (err){
+			console.log(err.response.data)
 				const variant = 'error';
 				enqueueSnackbar('Unable to Add Po Number: ' + selectedItem.poNumber, {
 					variant,
 				});
 				handleClose()
-			})
+		}
+
+		// axiosInstance.post(url,data,config)
+		// 	.then((res)=> {
+
+		// 		const variant = 'success';
+		// 		enqueueSnackbar('Po Number: ' + selectedItem.poNumber + 'successfully added!', {
+		// 			variant,
+		// 		});
+
+		// 		setApprovedFuel(0)
+			
+		// 	handleClose()
+		// 	}).catch((error) => {
+		// 		console.log(error.response.data)
+		// 		const variant = 'error';
+		// 		enqueueSnackbar('Unable to Add Po Number: ' + selectedItem.poNumber, {
+		// 			variant,
+		// 		});
+		// 		handleClose()
+		// 	})
 		
 	}
 
