@@ -16,8 +16,17 @@ import { Box, IconButton, Typography, useTheme } from '@mui/material';
 import { useState } from 'react';
 import { Menu, MenuItem, ProSidebar } from 'react-pro-sidebar';
 import 'react-pro-sidebar/dist/css/styles.css';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import { tokens } from '../../theme';
+
+import { Link, useNavigate } from 'react-router-dom';
+import * as React from 'react';
+//import axios from 'axios';
+import axiosInstance from '../../api/axios';
+import { useEffect } from 'react';
+import { useSnackbar } from 'notistack';
+
+
 const Item = ({ title, to, icon, selected, setSelected }) => {
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
@@ -41,6 +50,52 @@ const Sidebar = () => {
 	const colors = tokens(theme.palette.mode);
 	const [isCollapsed, setIsCollapsed] = useState(false);
 	const [selected, setSelected] = useState('Dashboard');
+	const { enqueueSnackbar } = useSnackbar();
+	const navigate = useNavigate();
+
+	const token = sessionStorage.getItem("token")
+	const config = {
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		}
+	};
+
+	const [empId, setEmpId] = useState(0);
+	const [userType, setuserType] = useState('');
+	const [Name, setName] = useState('');
+	
+
+	useEffect(() => {
+		 axiosInstance.get('UserAuth/Details',config)
+		 .then((res) => {
+			setEmpId(res.data.empid)
+			setuserType(res.data.usertype)
+
+			const name = res.data.name;
+			const properName = name.toLowerCase().split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+			setName(properName)
+			
+
+		 }).catch((err) =>{
+			console.log(err)
+			if(err.response.status == 401){
+				sessionStorage.clear()
+				navigate('/login');
+			}else {
+						console.log(err)
+						const variant = 'error';
+					enqueueSnackbar('Unable to retrieve user data', {
+						variant,
+					});
+			}
+		 })
+			
+		
+	}, [empId, userType, Name]);
+
+
+
 
 	return (
 		<Box
@@ -119,10 +174,14 @@ const Sidebar = () => {
 									fontWeight="bold"
 									sx={{ m: '10px 0 0 0' }}
 								>
-									Juan Dela Cruz
+									{//Juan Dela Cruz
+										Name
+									}
 								</Typography>
 								<Typography variant="h5" color={colors.greenAccent[500]}>
-									Admin
+								
+									{userType}
+								
 								</Typography>
 							</Box>
 						</Box>
