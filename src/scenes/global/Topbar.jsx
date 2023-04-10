@@ -26,6 +26,10 @@ const Topbar = () => {
 		setAnchorEl(event.currentTarget);
 	};
 
+
+	const logout = () =>{
+		sessionStorage.clear()
+	}
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
@@ -92,7 +96,7 @@ const Topbar = () => {
 					onClose={handleClose}
 				>
 					<MenuItem onClick={handleClose}>My Account</MenuItem>
-					<MenuItem onClick={handleClose}>Sign Out</MenuItem>
+					<MenuItem onClick={logout}>Sign Out</MenuItem>
 				</Menu>
 			</Box>
 		</Box>
