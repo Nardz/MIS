@@ -32,8 +32,8 @@ const Registration = () => {
 	// };
 	const isNonMobile = useMediaQuery('(min-width:600px)');
 
-	const ErrMsg = (msg) =>{
-		const variant = 'error';
+	const ErrMsg = (type, msg) =>{
+		const variant = type;
 		enqueueSnackbar(msg, {
 			variant,
 		});
@@ -43,73 +43,26 @@ const Registration = () => {
 
 	const handleFormSubmit = (values) => {
 
-		axiosInstance.get(`UserAuth/AuthKey/${values.securityCode}`)
-		.then((result) =>{
-					if (result.data.recStatus == 1) {
-						
-						axiosInstance.get(`Employee/EmpUserType/${result.data.empId}`)
-						.then((res) =>{
+		const url = 'UserAuth/Register'
+		const data = 
+		{
+			"username": values.username,
+			"password": values.password,
+			"regKey":values.securityCode
+		}
 
+		axiosInstance.post(url,data)
+		.then((res) =>{
+			console.log(res)	
+			 ErrMsg("success",res.data);							
+			 navigate('/login')
+		}).catch((err) =>{
+			console.log(err)
 
-							axiosInstance.get(`UserAuth/username/${values.username}`)
-							.then((res)=>{
-							
-									ErrMsg('Username Already in Use!');
-								
-							}).catch((err)=>{
-								const url = 'UserAuth/Register'
-									const data = 
-									{
-										"empId": result.data.empId,
-										"userTypeId": res.data.userTypeId,
-										"username": values.username,
-										"password": values.password
-									}
-			
-									axiosInstance.post(url,data)
-									.then((rslt) =>{
-		
-											 const url = 'UserAuth/Key'
-											const data = 
-											{
-												 "empId": result.data.empId,
-												 "uniqueKey": values.securityCode
-											}
-											axiosInstance.put(url,data)
-											.then((res) =>{
-												console.log(res)
-											
-												navigate('/login')
-											}).catch((err)=>{
-												console.log(err)
-
-												ErrMsg('Unable to Update Security Code');
-												
-											})
-									}).catch((err)=>{
-										console.log(err)
-
-										ErrMsg('Unable to Register User');
-									
-									})
-							})
-					
-						}).catch((err)=>{
-							console.log(err)
-							ErrMsg('Unable to Get UserType');
-							
-						})
-					}else{
-
-						ErrMsg('User Already Registered!');
-					
-					}
-		}).catch((error) =>{
-			console.log(error)
-
-			ErrMsg('Security Code Doesn\'t Exist');
-			
+			 ErrMsg("error",err.response.data);
 		})
+
+		
 
 		// console.log(values);
 		// localStorage.setItem('user', 'test');

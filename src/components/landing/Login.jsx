@@ -37,7 +37,7 @@ const Login = () => {
 			}
 			axiosInstance.post(url,data)
 			.then((result)=> {
-				console.log(result.data)
+				//console.log(result.data)
 				// sessionStorage.setItem("empId",result.data.empId)
 				// sessionStorage.setItem("userType",result.data.userTypeId)
 				// sessionStorage.setItem("name",result.data.name)
