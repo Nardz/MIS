@@ -74,11 +74,18 @@ const PoFuel = () => {
     setRemark(event.target.value);
   };
 
-	const empId = parseInt(sessionStorage.getItem("empId"))
-  const userType = parseInt(sessionStorage.getItem("userType"))
-  //const userType = 4
-  const branchId = parseInt(sessionStorage.getItem("branch"))
-  //const branchId = 3
+	const token = sessionStorage.getItem("token")
+
+	const config = {
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		}
+	};
+
+	const [empId, setEmpId] = useState(0);
+	const [userType, setuserType] = useState(0);
+	const [branchId, setbranchId] = useState(0);
 
 
 	
