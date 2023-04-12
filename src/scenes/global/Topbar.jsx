@@ -13,12 +13,13 @@ import Badge from '@mui/material/Badge';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { dataEditList, JOVehicleList, poFuel } from '../../data/mockData';
-
-import { Link } from 'react-router-dom';
+import { trail } from '../../redux/trail';
+import { Link ,useNavigate} from 'react-router-dom';
 const Topbar = () => {
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
 	const colorMode = useContext(ColorModeContext);
+	const navigate = useNavigate();
 
 	const [anchorEl, setAnchorEl] = useState(null);
 
@@ -28,7 +29,8 @@ const Topbar = () => {
 
 
 	const logout = () =>{
-		sessionStorage.clear()
+		trail(7)
+		navigate('/login');
 	}
 	const handleClose = () => {
 		setAnchorEl(null);

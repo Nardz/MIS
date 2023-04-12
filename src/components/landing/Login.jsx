@@ -18,6 +18,7 @@ import { tokens } from '../../theme';
 // import axios from 'axios';
 import axiosInstance from '../../api/axios';
 import { useSnackbar } from 'notistack';
+import { trail } from '../../redux/trail';
 
 const Login = () => {
 	const navigate = useNavigate();
@@ -27,6 +28,7 @@ const Login = () => {
 
 	const isNonMobile = useMediaQuery('(min-width:600px)');
 
+	
 	const handleFormSubmit = (values) => {
 
 
@@ -47,6 +49,7 @@ const Login = () => {
 
 				// console.log(sessionStorage.getItem("empId"))
 				// console.log(sessionStorage.getItem("userType"))
+				trail(6)
 				navigate('/');
 			}).catch((error) => {
 				console.log(error.response.data)
