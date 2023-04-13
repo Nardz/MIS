@@ -25,6 +25,7 @@ import * as React from 'react';
 import axiosInstance from '../../api/axios';
 import { useEffect } from 'react';
 import { useSnackbar } from 'notistack';
+import { imageExists } from 'image-exists'
 
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -64,7 +65,26 @@ const Sidebar = () => {
 	const [empId, setEmpId] = useState(0);
 	const [userType, setuserType] = useState('');
 	const [Name, setName] = useState('');
+	const [Pic, setPic] = useState('');
+
 	
+	function checkIfImageExists(url, callback) {
+		const img = new Image();
+		img.src = url;
+		
+		if (img.complete) {
+			callback(true);
+		} else {
+			img.onload = () => {
+				callback(true);
+			};
+			
+			img.onerror = () => {
+				callback(false);
+			};
+		}
+	}
+
 
 	useEffect(() => {
 		 axiosInstance.get('UserAuth/Details',config)
@@ -76,6 +96,18 @@ const Sidebar = () => {
 			const properName = name.toLowerCase().split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
 			setName(properName)
 			
+			const yourImage = process.env.PUBLIC_URL + `assets/user/${empId}.png`;
+			const defaultImage = process.env.PUBLIC_URL + `assets/user/user.png`;
+
+			 
+			
+							checkIfImageExists(yourImage, (exists) => {
+				if (exists) {
+					setPic(yourImage)
+				} else {
+					setPic(defaultImage)
+				}
+				});
 
 		 }).catch((err) =>{
 			console.log(err)
@@ -92,7 +124,7 @@ const Sidebar = () => {
 		 })
 			
 		
-	}, [empId, userType, Name]);
+	}, [empId, userType, Name,Pic]);
 
 
 
@@ -163,7 +195,7 @@ const Sidebar = () => {
 									alt="profile-user"
 									width="100px"
 									height="100px"
-									src={`../../assets/user.png`}
+									src={`${Pic}`}
 									style={{ cursor: 'pointer', borderRadius: '50%' }}
 								/>
 							</Box>
