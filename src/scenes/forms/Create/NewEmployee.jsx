@@ -12,7 +12,11 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Select from '@mui/material/Select';
-import { branches, userTypes, vehicles } from '../../../data/mockData';
+//import { branches, userTypes, vehicles } from '../../../data/mockData';
+import { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axiosInstance from '../../../api/axios';
+import { useSnackbar } from 'notistack';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -39,7 +43,7 @@ const checkoutSchema = yup.object().shape({
 	firstName: yup.string().required('required'),
 	lastName: yup.string().required('required'),
 	userType: yup.string().required('required'),
-	//branch: yup.string().required('required'),
+	// branch: yup.string().required('required'),
 });
 const initialValues = {
 	firstName: '',
@@ -53,10 +57,76 @@ const NewEmployee = () => {
 	const isNonMobile = useMediaQuery('(min-width:600px)');
 
 	const [branchName, setBranchName] = useState([]);
+	const [branches, setBranches] = useState([]);
+	const [userTypes, setuserTypes] = useState([]);
+	
+//	const [branchVal, set] = useState([]);
+
+const bid = []
+
+	const { enqueueSnackbar } = useSnackbar();
+	const navigate = useNavigate();
+
+	const token = sessionStorage.getItem("token")
+	const config = {
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		}
+	};
+	function capitalizeString(str) {
+		return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+	}
+	
+	const branchids = (branchName) => {
+		
+		branchName.map((branch) => (
+			bid.push(branch.branchId)
+		))
+	}
+
+	const addEmp = async (values) => {
+
+		const url = 'Employee/NewEmployee'
+		const data = {
+			"firstname":capitalizeString(values.firstName),
+			"lastname":capitalizeString(values.lastName),
+			"usertype":values.userType,
+			"branchId":bid,
+		}
+
+		await axiosInstance.post(url,data,config)
+		.then((res) => {
+			//console.log(res)
+			const variant = 'success';
+			enqueueSnackbar('Employee '+ values.firstName + " added successfully", {
+			variant,
+		});
+		navigate(`/employees/${res.data}`)	
+		}).catch((err) =>{
+			console.log(err)
+			const variant = 'error';
+			enqueueSnackbar('Unable to add employee :' + err.response.data, {
+			variant,
+		});
+		if (err.code == 'ERR_NETWORK' || err.response.status == 401) {
+		 		sessionStorage.clear()
+				navigate('/login');
+		}
+		})
+
+	}
 
 	const handleFormSubmit = (values) => {
-		console.log(values);
-	};
+		branchids(branchName)
+		addEmp(values)
+
+
+	};	
+	
+
+
+	
 
 	const handleChangeBranch = (event) => {
 		const {
@@ -67,6 +137,47 @@ const NewEmployee = () => {
 			typeof value === 'string' ? value.split(',') : value
 		);
 	};
+
+	const getBranch = async () =>{
+	await	axiosInstance.get('Branch',config)
+		.then((res) =>{
+			setBranches(res.data)
+		}).catch((err) =>{
+			console.log(err)
+			const variant = 'error';
+			enqueueSnackbar('Unable to retrieve branches', {
+			variant,
+		});
+		if (err.code == 'ERR_NETWORK' || err.response.status == 401) {
+		 		sessionStorage.clear()
+				navigate('/login');
+		}
+		})
+	}
+
+	const getUserType = async () =>{
+		await	axiosInstance.get('UserType',config)
+			.then((res) =>{
+				setuserTypes(res.data)
+			}).catch((err) =>{
+				console.log(err)
+				const variant = 'error';
+				enqueueSnackbar('Unable to retrieve Usertypes', {
+				variant,
+			});
+			if (err.code == 'ERR_NETWORK'|| err.response.status == 401) {
+					 sessionStorage.clear()
+					navigate('/login');
+			}
+			})
+		}
+
+	useEffect(() => {
+		getBranch()
+		getUserType()
+	},[branches,userTypes])
+
+
 
 	return (
 		<Box m="20px">
@@ -144,8 +255,8 @@ const NewEmployee = () => {
 									label="userType"
 								>
 									{userTypes.map((userType) => (
-										<MenuItem key={userType} value={userType}>
-											{userType}
+										<MenuItem key={userType.userTypeId} value={userType.userTypeId}>
+											{userType.description}
 										</MenuItem>
 									))}
 								</Select>
@@ -157,7 +268,7 @@ const NewEmployee = () => {
 								</Typography>
 							</FormControl>
 
-							<FormControl
+							{/* <FormControl
 								variant="filled"
 								sx={{ gridColumn: 'span 1' }}
 								error={!!touched.vehicle && !!errors.vehicle}
@@ -189,8 +300,8 @@ const NewEmployee = () => {
 								>
 									{touched.vehicle && errors.vehicle}
 								</Typography>
-							</FormControl>
-							<TextField
+							</FormControl> */}
+							{/* <TextField
 								fullWidth
 								variant="filled"
 								size="small"
@@ -204,16 +315,16 @@ const NewEmployee = () => {
 								helperText={touched.securityCode && errors.securityCode}
 								sx={{ gridColumn: 'span 2' }}
 								color="secondary"
-							/>
+							/> */}
 
 							<FormControl
 								variant="outlined"
 								sx={{ gridColumn: 'span 4' }}
-								error={!!touched.vehicle && !!errors.vehicle}
-								helperText={touched.vehicle && errors.vehicle}
+								error={!!touched.branch && !!errors.branch}
+								helperText={touched.branch && errors.branch}
 								size="small"
 								color="secondary"
-								value={values.vehicle}
+								value={values.branch}
 							>
 								<InputLabel id="branch">Branch </InputLabel>
 								<Select
@@ -230,8 +341,10 @@ const NewEmployee = () => {
 									}
 									renderValue={(selected) => (
 										<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-											{selected.map((value) => (
-												<Chip key={value} label={value} />
+											{
+											selected.map((value) => (
+												<Chip key={value.branchId} label={value.description} />
+												//<Chip key={value} label={value} />
 											))}
 										</Box>
 									)}
@@ -239,11 +352,11 @@ const NewEmployee = () => {
 								>
 									{branches.map((branch) => (
 										<MenuItem
-											key={branch.id}
-											value={branch.value}
+											key={branch.branchId}
+											value={branch}
 											style={getStyles(branch, branchName, theme)}
 										>
-											{branch.label}
+											{branch.description}
 										</MenuItem>
 									))}
 								</Select>
